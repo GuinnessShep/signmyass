@@ -1,0 +1,39 @@
+name: Build and Upload Nano Binary
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: |
+        brew install pkg-config gettext ncurses
+
+    - name: Download nano source
+      run: |
+        curl -O https://www.nano-editor.org/dist/v7/nano-7.2.tar.xz
+        tar -xf nano-7.2.tar.xz
+
+    - name: Build nano
+      run: |
+        cd nano-7.2
+        ./configure --disable-debug \
+                    --disable-dependency-tracking \
+                    --enable-color \
+                    --enable-extra \
+                    --enable-multibuffer \
+                    --enable-nanorc \
+                    --enable-utf8
+        make
+
+    - name: Upload binary
+      run: |
+        curl --upload-file ./nano-7.2/src/nano https://free.keep.sh
+
