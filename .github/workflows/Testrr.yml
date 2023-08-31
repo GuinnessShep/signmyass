@@ -1,9 +1,7 @@
 name: Build and Upload Nano Binary
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   build:
